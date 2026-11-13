@@ -1,0 +1,31 @@
+---
+import { copy, languages, navigation, url, type Language, type Page } from '../i18n';
+interface Props { lang: Language; page: Page; projectSlug?: string; }
+const { lang, page, projectSlug } = Astro.props;
+const t = copy[lang];
+const links = navigation(lang).slice(1);
+---
+<header class="site-header grid grid-cols-[1fr_auto] items-center gap-6 px-[7%] py-6 lg:grid-cols-[1fr_auto_auto] lg:py-8">
+  <a href={url(lang)} class="font-display text-xl font-bold lg:text-[27px]">Rus B.Lana</a>
+  <nav aria-label={t.menu} class="hidden items-center gap-6 text-[17px] font-medium lg:flex">{links.map(link => <a href={link.href} class="nav-link"><span>{link.label}</span><span aria-hidden="true">{link.label}</span></a>)}</nav>
+  <nav aria-label={t.languages} class="hidden justify-self-end text-sm font-medium lg:flex">{languages.map((language, i) => <><a href={url(language, page, projectSlug)} lang={language} hreflang={language} aria-current={lang === language ? 'page' : undefined} class={lang === language ? '' : 'opacity-45 hover:opacity-100'}>{language.toUpperCase()}</a>{i < 2 && <span aria-hidden="true" class="mx-1">/</span>}</>)}</nav>
+  <details class="group lg:hidden">
+    <summary class="cursor-pointer list-none p-2" aria-label={t.menu}>
+      <svg class="block group-open:hidden" width="28" height="24" viewBox="0 0 28 24" fill="none" aria-hidden="true"><path d="M2 5C8 3 18 7 26 4M3 12C10 10 18 14 25 11M2 19C9 17 19 21 26 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+      <svg class="hidden group-open:block" width="28" height="24" viewBox="0 0 28 24" fill="none" aria-hidden="true"><path d="M5 3C10 10 19 14 24 21M24 3C18 10 10 15 5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </summary>
+    <nav aria-label={t.menu} class="absolute inset-x-0 top-full grid gap-6 bg-brown px-[7%] py-8 text-paper">{links.map(link => <a href={link.href} class="font-display text-3xl">{link.label}</a>)}<div class="flex gap-5 text-base">{languages.map(language => <a href={url(language, page, projectSlug)} lang={language} hreflang={language} aria-current={lang === language ? 'page' : undefined} class={lang === language ? 'underline underline-offset-4' : 'opacity-60'}>{language.toUpperCase()}</a>)}</div></nav>
+  </details>
+</header>
+<script>
+  const menu = document.querySelector('details');
+  const header = document.querySelector('header');
+  const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 80);
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+  menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { menu.open = false; }));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && menu) menu.open = false; });
+</script>
+
+
+

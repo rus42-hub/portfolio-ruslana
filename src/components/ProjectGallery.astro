@@ -1,0 +1,20 @@
+---
+import { fileURL, projectTitle, mediaURL, type FullProject } from '../lib/projects';
+import { projectsCopy } from '../data/projects-copy';
+import type { Language } from '../i18n';
+import ProjectMedia from './ProjectMedia.astro';
+import Chevron from './Chevron.astro';
+interface Props { project: FullProject; lang: Language; }
+const { project, lang } = Astro.props;
+const t = projectsCopy[lang];
+---
+<div class:list={['project-gallery', { 'gallery-portrait': project.media.length > 1 && ['graphic-print', 'drawing-painting', 'vector'].includes(project.categoryRecord.slug) }]} style={`--gallery-ratio: ${project.categoryRecord.slug === 'graphic-print' ? '2 / 3' : project.categoryRecord.slug === 'drawing-painting' ? '1' : project.categoryRecord.slug === 'vector' ? '3 / 4' : '16 / 9'}`} data-gallery aria-label={t.gallery}>
+  <div class="gallery-main">{project.media.map((media, index) => <figure class="gallery-slide" data-slide hidden={index !== 0}>{media.type === 'image' ? <button type="button" class="gallery-image-button" data-gallery-open aria-label={t.enlarge}><ProjectMedia media={media} lang={lang} eager={index === 0} /></button> : <ProjectMedia media={media} lang={lang} eager={index === 0} />}</figure>)}
+    {project.media.length > 1 && <div class="gallery-arrows"><button type="button" data-gallery-step="-1" aria-label={`${t.gallery} — ←`}><Chevron direction="left" /></button><button type="button" data-gallery-step="1" aria-label={`${t.gallery} — →`}><Chevron direction="right" /></button></div>}
+  </div>
+  {project.media.length > 1 && <div class="gallery-thumbnails">{project.media.map((media, index) => <button type="button" data-gallery-index={index} aria-label={`${t.gallery} — ${index + 1}`} aria-pressed={index === 0}>{media.type === 'image' || media.image ? <img src={media.type === 'video' ? fileURL(media, 'project_media', media.image) : mediaURL(media)} alt="" loading="lazy" /> : null}{media.type === 'video' && <span class="gallery-thumbnail-play text-xs" aria-hidden="true">▶</span>}</button>)}</div>}
+  <dialog class="gallery-dialog text-brown" aria-label={projectTitle(project, lang)}><div class="gallery-lightbox-toolbar"><p class="font-editorial text-sm md:text-lg">{projectTitle(project, lang)}</p><div class="flex items-center gap-2"><button type="button" data-zoom-reset disabled aria-label={t.resetZoom}>↺</button><button type="button" data-zoom-step="1" aria-label={t.zoomIn}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6m-3-3v6"/></svg></button><button type="button" disabled data-zoom-step="-1" aria-label={t.zoomOut}>−</button><button type="button" data-gallery-close aria-label={t.close}>×</button></div></div><div class="gallery-lightbox-viewport"><button type="button" class="gallery-lightbox-image" data-zoom-toggle aria-label={t.zoomIn}><img alt={projectTitle(project, lang)} /></button></div></dialog>
+</div>
+<script>
+  import '../scripts/project-gallery';
+</script>

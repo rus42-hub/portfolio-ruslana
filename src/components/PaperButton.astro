@@ -1,0 +1,8 @@
+---
+interface Props { href: string; }
+const { href } = Astro.props;
+---
+<a href={href} class="paper-button mt-8 inline-flex min-h-[54px] items-center justify-center gap-3 px-8 text-[15px] font-semibold">
+  <svg class="paper-button-shape" viewBox="-2 -2 297 58" preserveAspectRatio="none" aria-hidden="true"><path d="M7.83745 54L0 52.9259V48.4815L2.71296 38.962L0 30.7595L0.30144 21.1899L2.41152 15.037V10.0741L0.30144 7.2963V2L2.71296 0H38.8858L49.1348 0.555556L83.8004 0L108.82 0.518519L133.84 1.62963L149.514 0.518519L170.012 0L187.496 2.11111L199.252 0H232.109L252.607 0.555556L278.531 0L290.588 2.66667L293 9.77778L284.258 15.5185L290.588 19.963V26.6582L287.273 32.963L293 35.8148L290.588 41.0127L293 47.2222V50.8889L286.971 53.4815H245.071L219.449 54L201.362 52.8889L163.381 54L141.074 52.8889H108.217L84.7047 54L65.1111 53.4815H45.5175L35.57 54H7.83745Z" vector-effect="non-scaling-stroke" /></svg>
+  <span class="relative flex items-center gap-3"><slot /></span>
+</a>

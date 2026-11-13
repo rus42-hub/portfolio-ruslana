@@ -1,0 +1,26 @@
+<div id="page-loading" aria-hidden="true"><span></span><span></span><span></span></div>
+<style is:inline>
+  #page-loading { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; pointer-events: none; background: #24180c; }
+  #page-loading::before { content: ''; position: absolute; inset: 0; background: #3b3025; mask: url('/shapes/waves.svg') center top / 1440px 240px repeat; }
+  #page-loading span { grid-area: 1 / 1; width: 9px; height: 9px; border-radius: 50%; background: #fffbf7; visibility: hidden; animation: loading-show 0s .18s forwards, loading-orbit 1.8s ease-in-out infinite; }
+  #page-loading span:nth-child(2) { animation-delay: .18s, -.6s; }
+  #page-loading span:nth-child(3) { animation-delay: .18s, -1.2s; }
+  @keyframes loading-show { to { visibility: visible; } }
+  @keyframes loading-orbit {
+    0%, 100% { transform: translateX(-17px); }
+    33.333% { transform: scale(.72); }
+    66.667% { transform: translateX(17px); }
+    83.333% { transform: translateY(-9px) scale(.82); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #page-loading span { animation: loading-show 0s .18s forwards; }
+    #page-loading span:first-child { transform: translateX(-17px); }
+    #page-loading span:last-child { transform: translateX(17px); }
+  }
+</style>
+<noscript><style>#page-loading { display: none; }</style></noscript>
+<script is:inline>
+  const dismissLoading = () => document.getElementById('page-loading')?.remove();
+  document.addEventListener('DOMContentLoaded', dismissLoading, { once: true });
+  setTimeout(dismissLoading, 4000);
+</script>

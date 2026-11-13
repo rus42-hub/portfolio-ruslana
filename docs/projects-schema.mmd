@@ -1,0 +1,57 @@
+erDiagram
+    CATEGORY ||--o{ PROJECT : classifies
+    PROJECT ||--o{ MEDIA : gallery
+    PROJECT ||--o{ SECTION : stages
+    CATEGORY {
+        text slug UK
+        text name_fr
+        text name_en
+        text name_ru
+        number sort_order
+    }
+    PROJECT {
+        text slug UK
+        relation category FK
+        text title_fr
+        text title_en
+        text title_ru
+        text title_outline_fr
+        text title_outline_en
+        text title_outline_ru
+        select work_type
+        number completed_year
+        text description_fr
+        text description_en
+        text description_ru
+        text seo_title_fr
+        text seo_description_fr
+        number priority_rank
+        number home_rank
+        select status
+    }
+    MEDIA {
+        relation project FK
+        select type
+        number position
+        file image
+        url media_url
+        text alt_fr
+        text alt_en
+        text alt_ru
+        text caption_fr
+        text caption_en
+        text caption_ru
+    }
+    SECTION {
+        relation project FK
+        number position
+        text title_fr
+        text title_en
+        text title_ru
+        text description_fr
+        text description_en
+        text description_ru
+        file detail_image
+        file detail_image_mobile
+        url button_url
+    }

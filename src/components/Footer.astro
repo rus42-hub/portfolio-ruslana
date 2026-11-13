@@ -1,0 +1,12 @@
+---
+import { copy, navigation, url, type Language } from '../i18n';
+interface Props { lang: Language; }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+<footer class="relative mx-auto grid max-w-[1600px] gap-8 px-[7%] py-14 text-paper lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+  <a href={url(lang)} class="font-display text-[32px] font-bold">Rus B.Lana</a>
+  <nav aria-label={t.menu} class="flex flex-wrap gap-6 text-xs uppercase tracking-wider">{navigation(lang).map(link => <a href={link.href} class="nav-link"><span>{link.label}</span><span aria-hidden="true">{link.label}</span></a>)}</nav>
+  <div class="text-xs leading-6 lg:text-right"><p>Ruslana Budniak — {t.portfolio} 2026</p><a href={url(lang, 'legal')} class="text-muted underline underline-offset-4">{t.legal}</a></div>
+</footer>
+

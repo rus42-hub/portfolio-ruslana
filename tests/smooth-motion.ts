@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { smoothMotion } from '../src/lib/smooth-motion';
+const fullFrame = smoothMotion(0, 1, 32);
+const halfFrames = smoothMotion(smoothMotion(0, 1, 16), 1, 16);
+assert.ok(Math.abs(fullFrame - halfFrames) < 1e-12, 'Motion must be independent of refresh rate');
+assert.ok(fullFrame > 0 && fullFrame < 1, 'No jump or overshoot');
+assert.equal(smoothMotion(.5, 0, 16, true), 0, 'Reduced motion and resize snap immediately');
+let value = 0;
+for (let frame = 0; frame < 120; frame++) value = smoothMotion(value, 1, 16);
+assert.equal(value, 1, 'Animation must settle and stop requesting frames');
+assert.ok(smoothMotion(1, -1, 16) < 1 && smoothMotion(1, -1, 16) > -1, 'Reversing scroll must remain smooth');
+console.log('PASS: refresh-rate independence, no overshoot, immediate reset, settling and reverse direction.');

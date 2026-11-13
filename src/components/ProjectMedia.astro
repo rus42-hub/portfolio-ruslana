@@ -1,0 +1,11 @@
+---
+import { field, fileURL, mediaURL, type Media } from '../lib/projects';
+import type { Language } from '../i18n';
+interface Props { media: Media; lang: Language; eager?: boolean; thumbnail?: '400x0' | '1200x0'; }
+const { media, lang, eager = false, thumbnail } = Astro.props;
+const imageSource = mediaURL(media) + (thumbnail && media.image ? `?thumb=${thumbnail}` : '');
+---
+{media.type === 'video' ? <video src={mediaURL(media)} poster={fileURL(media, 'project_media', media.image) || undefined} autoplay muted loop playsinline preload="metadata" aria-label={field(media, 'alt', lang) || ({ fr: 'Vidéo du projet', en: 'Project video', ru: 'Видео проекта' }[lang])} data-project-video></video> : <img src={imageSource} alt={field(media, 'alt', lang)} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+<script>
+  import '../scripts/project-video';
+</script>

@@ -1,0 +1,36 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Hero from '../components/Hero.astro';
+import AboutSection from '../components/AboutSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import AboutPage from '../components/AboutPage.astro';
+import HomeProjects from '../components/HomeProjects.astro';
+import ProjectsPage from '../components/ProjectsPage.astro';
+import ProjectPage from '../components/ProjectPage.astro';
+import { getPortfolio, field, projectTitle, mediaURL, type Category, type FullProject } from '../lib/projects';
+import { copy, languages, paths, url, type Language, type Page } from '../i18n';
+export async function getStaticPaths() {
+  const { projects, categories } = await getPortfolio();
+  const route = (href: string) => href.replace(/^\/|\/$/g, '') || undefined;
+  return languages.flatMap(lang => [...(Object.keys(paths) as Page[]).map(page => ({ params: { route: route(url(lang, page)) }, props: { lang, page, projects, categories } })), ...projects.map(project => ({ params: { route: route(url(lang, 'projects', project.slug)) }, props: { lang, page: 'projects' as Page, projects, categories, project } }))]);
+}
+interface Props { lang: Language; page: Page; projects: FullProject[]; categories: Category[]; project?: FullProject; }
+const { lang, page, projects, categories, project } = Astro.props;
+const t = copy[lang];
+const title = project ? field(project, 'seo_title', lang) || `${projectTitle(project, lang)} — Rus B.Lana` : `Rus B.Lana — ${page === 'home' ? t.designer : t[page]}`;
+const description = project ? field(project, 'seo_description', lang) || field(project, 'description', lang).slice(0, 180) : undefined;
+const image = project?.media[0]?.type === 'image' ? mediaURL(project.media[0]) : undefined;
+---
+<SiteLayout title={title} description={description} image={image} projectSlug={project?.slug} lang={lang} page={page}>
+      {project ? <ProjectPage project={project} projects={projects} lang={lang} /> : page === 'home' ? <>
+        <Hero lang={lang} />
+        <HomeProjects lang={lang} projects={projects} />
+        <AboutSection lang={lang} />
+        <ContactSection lang={lang} />
+      </> : page === 'about' ? <AboutPage lang={lang} /> : page === 'projects' ? <ProjectsPage lang={lang} projects={projects} categories={categories} /> : <section class="min-h-[65vh] px-[7%] py-20">
+        <h1 class="font-display text-5xl font-bold md:text-7xl">{t[page]}</h1>
+        <p class="mt-10 max-w-2xl text-base leading-8">{page === 'legal' ? t.legalDraft : t.soon}</p>
+      </section>}
+</SiteLayout>
+
+

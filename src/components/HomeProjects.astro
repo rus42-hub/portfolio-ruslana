@@ -1,0 +1,61 @@
+---
+import { field, projectURL, projectTitle, type FullProject } from '../lib/projects';
+import type { Language } from '../i18n';
+import { projectsCopy } from '../data/projects-copy';
+import ProjectMedia from './ProjectMedia.astro';
+import HomeArtCollection from './HomeArtCollection.astro';
+import ModelFrame from '../lab-3d/ModelFrame.astro';
+import { labModel } from '../lab-3d/models';
+interface Props { lang: Language; projects: FullProject[]; }
+const { lang, projects } = Astro.props;
+const t = projectsCopy[lang];
+const printHeadings = { fr: ['Design graphique', '& print'], en: ['Graphic design', '& print'], ru: ['Графический дизайн', 'и печать'] };
+const webHeadings = { fr: ['Web', '& interfaces'], en: ['Web', '& interfaces'], ru: ['Веб', 'и интерфейсы'] };
+const featured = projects.filter(project => project.home_rank > 0).sort((a, b) => a.home_rank - b.home_rank);
+---
+<div id="selected-projects">{featured.map(project => {
+  const print = project.categoryRecord.slug === 'graphic-print';
+  const modelling = project.categoryRecord.slug === '3d';
+  const stonehenge = project.slug === 'stonehenge';
+  const web = project.categoryRecord.slug === 'web';
+  const heading = field(project.categoryRecord, 'name', lang);
+  const tools = field(project, 'home_tools', lang) || field(project, 'tools', lang);
+  const summary = <dl class="project-summary grid gap-x-4 gap-y-2 text-xs uppercase md:grid-cols-[1.1fr_1.7fr_auto]">
+    <div><dt>{t.type}</dt><dd>{field(project, 'project_kind', lang)}</dd></div>
+    {tools && <div class="project-summary-tools md:hidden"><dt>{t.tools}</dt><dd>{tools}</dd></div>}
+    <div class="project-summary-role"><dt>{t.role}</dt><dd>{field(project, 'role', lang)}</dd></div>
+    <div class="project-summary-year"><dt>{t.year}</dt><dd>{project.completed_year}</dd></div>
+  </dl>;
+  return <section class:list={['home-project px-[7%]', { 'home-project-web': web, 'home-project-print': print, 'home-project-model': stonehenge }]} data-scroll-project={stonehenge ? undefined : ''} aria-labelledby={`home-${project.slug}`}>
+    {stonehenge ? <div class="home-model-track" data-lab-pin>
+      <div class="home-model-sticky" data-lab-pin-stage>
+        <div class="home-model-center">
+          <p class="project-side-tools text-[10px] uppercase">{tools}</p>
+          <p class="project-side-type text-[10px] uppercase">{t[project.work_type as "personal" | "university" | "professional"]}</p>
+        <div class="home-model-composition">
+          <h2 id={`home-${project.slug}`} class="home-model-title font-display font-bold uppercase">{heading}</h2>
+          <a href={projectURL(project, lang)} class="home-model-link lab-torn" aria-label={`${t.view} — ${projectTitle(project, lang)}`}><ModelFrame model={labModel('stonehenge')} mode="home" /></a>
+          <div class="home-model-title-mask lab-torn" aria-hidden="true"><span class="home-model-title outline-text font-display font-bold uppercase">{heading}</span></div>
+        </div>
+      </div>
+        {summary}
+      </div>
+    </div> : <div class="project-stage">
+      <h2 id={`home-${project.slug}`} class="project-section-heading font-display font-bold uppercase">{print ? <>{printHeadings[lang][0]}<span class={lang === 'ru' ? 'block outline-text' : 'sr-only'}> {printHeadings[lang][1]}</span></> : modelling ? <><span class="block">{{ fr: 'Modélisation', en: 'Modelling', ru: 'Моделирование' }[lang]}</span><span class="block">3D</span></> : web ? webHeadings[lang].map(line => <span class="block">{line}</span>) : heading}</h2>
+      <p class="project-side-tools text-[10px] uppercase tracking-[3px]">{tools}</p>
+      <a href={projectURL(project, lang)} class:list={['project-drift', { 'project-triptych': print, 'project-web-art': !print }]} aria-label={`${t.view} — ${projectTitle(project, lang)}`}>
+        {print ? project.media.filter(media => media.type === 'image').slice(0, 3).map(media => <div class="project-poster"><ProjectMedia media={media} lang={lang} /></div>) : project.media[0] && <div class="project-paper-media"><ProjectMedia media={project.media[0]} lang={lang} /></div>}
+      </a>
+      {print && lang !== 'ru' && <div class="project-section-heading project-heading-outline outline-text font-display font-bold uppercase" aria-hidden="true">{printHeadings[lang][1]}</div>}
+      <p class="project-side-type text-[10px] uppercase tracking-[3px]">{t[project.work_type as 'personal' | 'university' | 'professional']}</p>
+    </div>}
+    {!stonehenge && summary}
+  </section>;
+})}</div>
+<HomeArtCollection projects={projects} lang={lang} />
+<script>
+  import '../scripts/project-motion';
+</script>
+
+
+

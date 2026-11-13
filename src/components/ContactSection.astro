@@ -1,0 +1,21 @@
+---
+import { copy, type Language } from '../i18n';
+import SocialLinks from './SocialLinks.astro';
+interface Props { lang: Language; }
+const { lang } = Astro.props;
+const t = copy[lang];
+const details = {
+  fr: { first: 'Parlons-', second: 'en.', button: 'Me contacter', invitation: 'Écrivez-moi pour imaginer quelque chose ensemble.', based: 'Basée à Montbéliard, France', available: 'Disponible pour un stage et des collaborations' },
+  en: { first: 'Let’s', second: 'talk.', button: 'Contact me', invitation: 'Get in touch to imagine something together.', based: 'Based in Montbéliard, France', available: 'Available for internships and collaborations' },
+  ru: { first: 'Давайте', second: 'поговорим.', button: 'Связаться со мной', invitation: 'Напишите мне — придумаем что-нибудь вместе.', based: 'Монбельяр, Франция', available: 'Открыта к стажировкам и сотрудничеству' }
+}[lang];
+---
+<section id="contact" class="grid items-start gap-12 px-[7%] py-20 md:grid-cols-2 md:gap-16 md:py-28" aria-labelledby="contact-title">
+  <div class="contact-heading"><h2 id="contact-title" class="font-display text-[clamp(48px,7vw,100px)] font-bold uppercase leading-[.9]">{details.first}<br /><span class="outline-text">{details.second}</span></h2><img src="/shapes/orbit-contact.svg" alt="" class="contact-orbit" /></div>
+  <div class="max-w-[540px]">
+    <p class="text-[18px] leading-[1.5] md:text-[22px]">{t.collaboration} {details.invitation}</p>
+    <a href="mailto:ruslanabudnak@gmail.com" class="pill-button my-8 flex min-h-[54px] max-w-[349px] items-center justify-center px-8 text-xs font-bold uppercase tracking-[2px]">{details.button}</a>
+    <SocialLinks />
+    <p class="mt-8 text-[11px] uppercase leading-6 tracking-[1.5px] md:text-[13px]">{details.based}<br />{details.available}</p>
+  </div>
+</section>

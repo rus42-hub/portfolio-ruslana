@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { scrollPose } from '../src/lib/project-motion';
+assert.equal(scrollPose(180, 540, 900, false, false).travel, 0);
+assert.equal(scrollPose(180, 540, 900, false, false).headingScale, 1);
+const entry = scrollPose(900, 540, 900, false, false);
+const exit = scrollPose(-500, 540, 900, false, false);
+assert.equal(entry.travel, -1);
+assert.equal(exit.travel, 1);
+assert.equal(entry.headingScale, 1.22);
+assert.equal(scrollPose(900, 540, 900, true, false).headingScale, 1.08);
+assert.deepEqual(scrollPose(900, 540, 900, false, true), { travel: 0, headingScale: 1 });
+assert.ok(scrollPose(400, 540, 900, false, false).travel < scrollPose(200, 540, 900, false, false).travel);
+console.log('Scroll animation: entry, centred position, exit, reverse direction, mobile range and reduced motion verified.');

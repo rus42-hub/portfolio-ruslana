@@ -1,0 +1,26 @@
+---
+import { field, fileURL, projectTitle, projectURL, accent, type FullProject } from '../lib/projects';
+import { isCompactCategory } from '../lib/catalog';
+import type { Language } from '../i18n';
+import { projectsCopy } from '../data/projects-copy';
+import ProjectMedia from './ProjectMedia.astro';
+interface Props { project: FullProject; lang: Language; order: number; }
+const { project, lang, order } = Astro.props;
+const t = projectsCopy[lang];
+const primary = project.media[0];
+const cover = primary?.type === 'video' && primary.image ? primary : project.media.find(media => media.type === 'image');
+const triptych = project.categoryRecord.slug === 'graphic-print';
+const catalogueCovers = new Set(['brutalisme', 'l-immensite-de-la-mer', 'depuis-ma-fenetre']);
+const customCover = catalogueCovers.has(project.slug) ? `/images/catalog/${project.slug}.webp` : '';
+---
+<article class:list={['catalog-card border border-brown/15', { 'catalog-card-small': isCompactCategory(project.categoryRecord.slug) }]} data-category={project.categoryRecord.slug} data-category-order={project.categoryRecord.sort_order} data-type={project.work_type} data-year={project.completed_year} data-order={order} style={`--project-accent: ${accent(project)}`}>
+  <a href={projectURL(project, lang)} class="block">
+    <div class:list={['catalog-art', { 'catalog-triptych': triptych }]}>
+      {customCover ? <img src={customCover} alt="" loading="lazy" decoding="async" />
+        : triptych ? project.media.filter(media => media.type === 'image').slice(0, 3).map(media => <ProjectMedia media={media} lang={lang} />)
+        : cover?.type === 'video' ? <img src={fileURL(cover, 'project_media', cover.image)} alt="" loading="lazy" decoding="async" />
+        : cover && <ProjectMedia media={cover} lang={lang} />}
+    </div>
+    <div class="grid grid-cols-[1fr_auto] gap-2 p-5"><div><p class="project-accent text-[10px] uppercase tracking-widest">{field(project.categoryRecord, 'name', lang)}</p><h2 class="mt-2 font-editorial text-lg font-bold">{projectTitle(project, lang)}</h2><p class="mt-2 text-xs opacity-65">{t[project.work_type as 'personal' | 'university' | 'professional']} · {project.completed_year}</p></div><span class="catalog-arrow self-end text-xl" aria-hidden="true">↗</span></div>
+  </a>
+</article>

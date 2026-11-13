@@ -1,0 +1,14 @@
+---
+import { latestPaintings, projectTitle, projectURL, type FullProject } from '../lib/projects';
+import type { Language } from '../i18n';
+import ProjectMedia from './ProjectMedia.astro';
+interface Props { projects: FullProject[]; lang: Language; }
+const { projects, lang } = Astro.props;
+const paintings = latestPaintings(projects);
+const title = { fr: ['Peinture & dessin', 'Illustration'], en: ['Painting & drawing', 'Illustration'], ru: ['Живопись и рисунок', 'Иллюстрация'] }[lang];
+---
+{paintings.length > 0 && <section class="home-art-collection px-[7%] pb-20" aria-labelledby="art-collection-heading"><h2 id="art-collection-heading" class="font-display text-center text-[clamp(28px,6vw,90px)] font-bold uppercase">{title[0]}</h2><div class="home-art-grid">{paintings.map((project, index) => <div class="home-art-float" data-art-float data-art-index={index}><a href={projectURL(project, lang)} aria-label={projectTitle(project, lang)}><ProjectMedia media={project.media[0]} lang={lang} thumbnail="400x0" /></a></div>)}</div><p class="outline-text font-display text-center text-[clamp(28px,6vw,90px)] font-bold uppercase" aria-hidden="true">{title[1]}</p></section>}
+<script>
+  import '../scripts/art-motion';
+</script>
+

@@ -1,0 +1,18 @@
+@theme {
+  --color-brown: #24180C;
+  --color-accent: #7C422B;
+  --color-paper: #FFFBF7;
+  --color-line: #3B3025;
+  --color-card: #FBF4EA;
+  --color-muted: #AC9173;
+  /* Try-on: Noto Serif Display 300. Earlier: 'Literata Variable' (import literata/opsz.css in BaseLayout), 'Oranienbaum' */
+  --font-editorial: 'Noto Serif Display Variable', Georgia, serif;
+  --font-display-weight: 300;
+  --font-display: var(--font-editorial);
+  --font-body: 'Inter Variable', Arial, sans-serif;
+  --radius-card: 15px;
+}
+
+/* Font try-on, chosen with ?font= in the address (see BaseLayout). */
+:root[data-font='literata'] { --font-editorial: 'Literata Variable', Georgia, serif; --font-display-weight: 300; }
+:root[data-font='spectral'] { --font-editorial: 'Spectral', Georgia, serif; --font-display-weight: 200; }

@@ -1,0 +1,17 @@
+---
+import { field, type Section } from '../lib/projects';
+import type { Language } from '../i18n';
+import { paletteAssets } from '../data/palette-assets';
+interface Props { section: Section; lang: Language; }
+const { section, lang } = Astro.props;
+const lines = (value: string) => value.split('\n').map(line => line.trim()).filter(Boolean);
+const palette = lines(String(section.palette || ''));
+const quotes = lines(field(section, 'quotes', lang));
+const process = lines(field(section, 'process', lang));
+---
+<div class:list={['project-visual-layout mt-5', { 'has-palette-title': field(section, 'palette_title', lang) }]}>
+  <div><p class="whitespace-pre-line text-sm leading-[1.8] md:text-base">{field(section, 'description', lang)}</p></div>
+  {palette.length > 0 && <div>{field(section, 'palette_title', lang) && <h3 class="project-accent text-sm font-semibold">{field(section, 'palette_title', lang)}</h3>}<ul class="project-palette" aria-label={field(section, 'palette_title', lang) || ({ fr: 'Palette de couleurs', en: 'Colour palette', ru: 'Цветовая палитра' }[lang])}>{palette.map(color => <li>{paletteAssets[color.toLowerCase()] ? <img src={paletteAssets[color.toLowerCase()]} alt={color} loading="lazy" /> : <span class="project-palette-swatch" style={`background: ${/^#[0-9a-f]{6}$/i.test(color) ? color : 'transparent'}`} role="img" aria-label={color} />}</li>)}</ul>{field(section, 'palette_notes', lang) && <ul class="project-palette-notes">{lines(field(section, 'palette_notes', lang)).map(note => <li>{note}</li>)}</ul>}</div>}
+</div>
+{process.length > 0 && <div class="mt-6">{field(section, 'process_title', lang) && <h3 class="project-accent text-sm font-semibold">{field(section, 'process_title', lang)}</h3>}<ol class="project-process">{process.map(step => <li>{step}</li>)}</ol></div>}
+{quotes.length > 0 && <div class="project-quotes">{quotes.map(quote => { const [text, emphasis] = quote.split('|'); return <blockquote><p>{text.trim()}{emphasis && <em>{emphasis.trim()}</em>}</p></blockquote>; })}</div>}

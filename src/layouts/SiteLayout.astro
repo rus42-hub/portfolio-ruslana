@@ -1,0 +1,17 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Chevron from '../components/Chevron.astro';
+import { copy, type Language, type Page } from '../i18n';
+interface Props { lang: Language; page: Page; title: string; description?: string; image?: string; projectSlug?: string; }
+const { lang, page, title, description, image, projectSlug } = Astro.props;
+---
+<BaseLayout title={title} description={description} image={image} projectSlug={projectSlug} lang={lang} page={page}>
+  <Header lang={lang} page={page} projectSlug={projectSlug} />
+  <div class="paper-stage"><div class="paper"><main>
+    <slot />
+    {page !== 'about' && <div class="flex justify-end px-[7%] pb-14"><a href="#top" aria-label={copy[lang].top} class="back-top inline-flex size-11 items-center justify-center border border-brown"><Chevron /></a></div>}
+  </main></div></div>
+  <Footer lang={lang} />
+</BaseLayout>

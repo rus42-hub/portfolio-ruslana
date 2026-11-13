@@ -1,0 +1,33 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/noto-serif-display';
+import '@fontsource-variable/literata/opsz.css';
+import '@fontsource/spectral/200.css';
+import '../styles/global.css';
+import PageLoading from '../components/PageLoading.astro';
+import { languages, url, type Language, type Page } from '../i18n';
+import { descriptions } from '../data/seo';
+interface Props { title?: string; description?: string; image?: string; projectSlug?: string; lang: Language; page: Page; notFound?: boolean; }
+const { title = 'Rus B.Lana — Graphiste & designer UX/UI', description = descriptions[Astro.props.lang][Astro.props.page], image, projectSlug, lang, page } = Astro.props;
+const canonical = Astro.site && !Astro.props.notFound ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Font try-on: add ?font=literata, ?font=spectral or ?font=noto to any address. The choice is remembered. -->
+    <script is:inline>try { const choice = new URLSearchParams(location.search).get('font'); if (choice) localStorage.setItem('font-try-on', choice); const font = choice || localStorage.getItem('font-try-on'); if (font) document.documentElement.dataset.font = font; } catch {}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {image && <meta property="og:image" content={image} />}
+    {canonical && <><link rel="canonical" href={canonical} /><meta property="og:url" content={canonical} />{languages.map(language => <link rel="alternate" hreflang={language} href={new URL(url(language, page, projectSlug), Astro.site)} />)}<link rel="alternate" hreflang="x-default" href={new URL(url('fr', page, projectSlug), Astro.site)} /></>}
+    {(page === 'legal' || Astro.props.notFound) && <meta name="robots" content="noindex,follow" />}
+    <title>{title}</title>
+  </head>
+  <body id="top"><PageLoading /><slot /></body>
+</html>
+

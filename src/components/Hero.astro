@@ -1,0 +1,24 @@
+---
+import { copy, url, type Language } from '../i18n';
+import PaperButton from './PaperButton.astro';
+import Portrait from './Portrait.astro';
+interface Props { lang: Language; }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <h1 id="hero-title" class="sr-only">Rus B.Lana — {t.designer}</h1>
+  <div class="hero-marquee hero-solid" aria-hidden="true"><div class="marquee-track">{[0, 1].map(() => <span class="marquee-group">{[0, 1, 2].map(() => <span>Rus B.Lana&nbsp;</span>)}</span>)}</div></div>
+  <Portrait lang={lang} />
+  <div class="hero-marquee hero-outline" aria-hidden="true"><div class="marquee-track">{[0, 1].map(() => <span class="marquee-group">{[0, 1, 2].map(() => <span>Rus B.Lana&nbsp;</span>)}</span>)}</div></div>
+  <div class="hero-intro">
+    <p class="text-[24px] font-semibold">{t.designer}</p>
+    <p class="mt-2 text-sm leading-relaxed md:text-base">{t.subtitle}</p>
+    <p class="mt-5 flex items-center gap-2 text-base"><img src="/images/location.png" alt="" width="24" height="24" />{t.location}</p>
+    <PaperButton href={url(lang, 'projects')}>{t.discover}<span aria-hidden="true">↗</span></PaperButton>
+  </div>
+</section>
+<script>
+  import '../scripts/hero-motion';
+</script>
+

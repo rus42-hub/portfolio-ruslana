@@ -1,0 +1,25 @@
+---
+import { copy, url, type Language } from '../i18n';
+interface Props { lang: Language; }
+const { lang } = Astro.props;
+const t = copy[lang];
+const details = {
+  fr: { label: 'Quelques mots sur moi', ending: "J’aime transformer une idée en expérience claire, sensible et vivante.", tags: ['Interfaces web', 'Identités visuelles', 'Image & mouvement'], place: 'Montbéliard, France · Création numérique' },
+  en: { label: 'A few words about me', ending: 'I enjoy turning an idea into a clear, thoughtful and lively experience.', tags: ['Web interfaces', 'Visual identities', 'Image & motion'], place: 'Montbéliard, France · Digital creation' },
+  ru: { label: 'Немного обо мне', ending: 'Мне нравится превращать идею в ясный, выразительный и живой опыт.', tags: ['Веб-интерфейсы', 'Визуальная айдентика', 'Изображение и движение'], place: 'Монбельяр, Франция · Цифровое творчество' }
+}[lang];
+---
+<section id="about" class="about-section px-[7%] py-20 md:py-28" aria-labelledby="about-title">
+  <h2 id="about-title" class="mx-auto max-w-5xl text-center font-display text-[clamp(32px,5.8vw,86px)] font-bold uppercase leading-[1.1] [text-wrap:balance]">{details.label}</h2>
+  <div class="mt-8 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+    <div class="about-monogram" aria-hidden="true"><span class="outline-text">R</span><img src="/shapes/orbit-about.svg" alt="" /></div>
+    <div class="max-w-[540px]">
+      <p class="text-[13px] uppercase tracking-[1.5px]">Ruslana Budniak</p>
+      <h3 class="mt-7 font-editorial text-2xl font-bold leading-tight md:text-[36px]">{t.intro}</h3>
+      <p class="mt-7 text-[17px] leading-[1.7]">{t.bio} {details.ending}</p>
+      <p class="mt-6 text-[13px] uppercase leading-6 tracking-[1.5px]">{details.place}</p>
+      <ul class="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-[12px] uppercase tracking-wider">{details.tags.map(tag => <li>{tag}</li>)}</ul>
+      <a href={url(lang, 'about')} class="pill-button mt-9 inline-flex min-h-[54px] items-center justify-center px-8 text-xs font-semibold uppercase tracking-[1.5px]">{t.more} →</a>
+    </div>
+  </div>
+</section>

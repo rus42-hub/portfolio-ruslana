@@ -1,0 +1,24 @@
+---
+import { field, type Category, type FullProject } from '../lib/projects';
+import type { Language } from '../i18n';
+import { projectsCopy } from '../data/projects-copy';
+import ProjectCard from './ProjectCard.astro';
+interface Props { lang: Language; projects: FullProject[]; categories: Category[]; }
+const { lang, projects, categories } = Astro.props;
+const t = projectsCopy[lang];
+const years = [...new Set(projects.map(project => project.completed_year))].sort((a, b) => b - a);
+---
+<section class="projects-page px-[7%] pb-20 pt-8" data-project-catalog>
+  <h1 class="font-display text-[clamp(38px,7vw,100px)] font-bold uppercase leading-tight">{t.heading[0]} <span class="outline-text">{t.heading[1]}</span></h1>
+  <p class="mt-6 max-w-xl text-sm leading-relaxed md:text-base">{t.introduction}</p>
+  <form class="project-filters mt-10 grid gap-6" aria-label={t.category}>
+    <fieldset class="flex flex-wrap gap-2"><legend class="sr-only">{t.category}</legend><label class="filter-chip"><input type="radio" name="category" value="" checked /><span>{t.all}</span></label>{categories.map(category => <label class="filter-chip"><input type="radio" name="category" value={category.slug} /><span>{field(category, 'name', lang)}</span></label>)}</fieldset>
+    <div class="catalog-toolbar"><p class="text-xs uppercase tracking-wider" aria-live="polite"><span data-result-count>{projects.length}</span> {t.displayed}</p><div class="flex gap-4"><details class="catalog-options"><summary aria-label={t.workType}><img src="/icons/project-filters.svg" alt="" /><span class="sr-only">{t.workType}</span><span class="catalog-active-dot" data-filter-active hidden></span></summary><div class="catalog-options-panel"><label class="filter-label">{t.workType}<select name="type"><option value="">{t.all}</option>{(['personal', 'university', 'professional'] as const).map(type => <option value={type}>{t[type]}</option>)}</select></label><label class="filter-label">{t.year}<select name="year"><option value="">{t.all}</option>{years.map(year => <option value={year}>{year}</option>)}</select></label><button type="reset" class="justify-self-start text-xs uppercase tracking-wider">{t.reset} ↺</button></div></details><details class="catalog-options"><summary aria-label={t.sort}><span aria-hidden="true" class="text-2xl">↓</span><span class="sr-only">{t.sort}</span><span class="catalog-active-dot" data-sort-active hidden></span></summary><div class="catalog-options-panel"><label class="filter-label">{t.sort}<select name="sort"><option value="recommended">{t.recommended}</option><option value="newest">{t.newest}</option><option value="oldest">{t.oldest}</option><option value="category">{t.grouped}</option></select></label></div></details></div></div>
+  </form>
+  <div class="catalog-mosaic" data-project-list>{projects.map((project, order) => <ProjectCard {project} {lang} {order} />)}</div>
+  <p class="py-16 text-center text-sm" data-empty hidden>{t.empty}</p>
+</section>
+<script>
+  import '../scripts/project-filters';
+</script>
+
