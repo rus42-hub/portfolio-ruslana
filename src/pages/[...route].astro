@@ -7,6 +7,7 @@ import AboutPage from '../components/AboutPage.astro';
 import HomeProjects from '../components/HomeProjects.astro';
 import ProjectsPage from '../components/ProjectsPage.astro';
 import ProjectPage from '../components/ProjectPage.astro';
+import LegalPage from '../components/LegalPage.astro';
 import { getPortfolio, field, projectTitle, mediaURL, type Category, type FullProject } from '../lib/projects';
 import { copy, languages, paths, url, type Language, type Page } from '../i18n';
 export async function getStaticPaths() {
@@ -27,9 +28,9 @@ const image = project?.media[0]?.type === 'image' ? mediaURL(project.media[0]) :
         <HomeProjects lang={lang} projects={projects} />
         <AboutSection lang={lang} />
         <ContactSection lang={lang} />
-      </> : page === 'about' ? <AboutPage lang={lang} /> : page === 'projects' ? <ProjectsPage lang={lang} projects={projects} categories={categories} /> : <section class="min-h-[65vh] px-[7%] py-20">
+      </> : page === 'about' ? <AboutPage lang={lang} /> : page === 'projects' ? <ProjectsPage lang={lang} projects={projects} categories={categories} /> : page === 'legal' ? <LegalPage lang={lang} /> : <section class="min-h-[65vh] px-[7%] py-20">
         <h1 class="font-display text-5xl font-bold md:text-7xl">{t[page]}</h1>
-        <p class="mt-10 max-w-2xl text-base leading-8">{page === 'legal' ? t.legalDraft : t.soon}</p>
+        <p class="mt-10 max-w-2xl text-base leading-8">{t.soon}</p>
       </section>}
 </SiteLayout>
 

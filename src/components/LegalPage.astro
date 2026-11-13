@@ -1,0 +1,56 @@
+---
+import type { Language } from '../i18n';
+
+interface Props { lang: Language; }
+const { lang } = Astro.props;
+
+const content = {
+  fr: {
+    title: 'Mentions légales',
+    sections: [
+      { title: 'Édition et publication', body: 'Ce portfolio personnel et non commercial est édité par Ruslana Budniak, étudiante en BUT MMI et responsable de la publication. Contact :', link: { href: 'mailto:ruslanabudnak@gmail.com', label: 'ruslanabudnak@gmail.com' } },
+      { title: 'Hébergement', body: 'Le site et son service de contenus sont hébergés sur une infrastructure mise à disposition par la Direction des systèmes d’information et du numérique (DSIN) de l’Université Marie et Louis Pasteur, 1 rue Claude Goudimel, 25030 Besançon cedex, France. Contact de l’hébergeur :', link: { href: 'mailto:webmaster-dsin@univ-fcomte.fr', label: 'webmaster-dsin@univ-fcomte.fr' } },
+      { title: 'Propriété intellectuelle', body: 'Sauf mention contraire, les textes, créations graphiques, photographies, vidéos, illustrations et modèles 3D présentés sur ce portfolio sont des œuvres de Ruslana Budniak. Toute reproduction, adaptation ou diffusion nécessite une autorisation préalable. Les marques et œuvres de tiers restent la propriété de leurs titulaires respectifs.' },
+      { title: 'Données et stockage local', body: 'Le site ne propose ni compte utilisateur ni formulaire de collecte et n’utilise aucun outil publicitaire ou de mesure d’audience. Une préférence facultative de typographie peut être conservée uniquement dans le stockage local du navigateur. Les journaux techniques du serveur peuvent traiter temporairement l’adresse IP afin d’assurer la sécurité et le fonctionnement du service.' },
+      { title: 'Liens externes', body: 'Les liens vers des sites ou plateformes externes sont fournis à titre informatif. Ruslana Budniak ne peut pas garantir leur disponibilité ni être responsable de leurs contenus ou de leurs pratiques de confidentialité.' },
+    ],
+    updated: 'Dernière mise à jour : 13 novembre 2026.',
+  },
+  en: {
+    title: 'Legal notice',
+    sections: [
+      { title: 'Publisher', body: 'This personal, non-commercial portfolio is published by Ruslana Budniak, a BUT MMI student and publication director. Contact:', link: { href: 'mailto:ruslanabudnak@gmail.com', label: 'ruslanabudnak@gmail.com' } },
+      { title: 'Hosting', body: 'The website and its content service are hosted on infrastructure provided by the Information Systems and Digital Department (DSIN) of Université Marie et Louis Pasteur, 1 rue Claude Goudimel, 25030 Besançon cedex, France. Hosting contact:', link: { href: 'mailto:webmaster-dsin@univ-fcomte.fr', label: 'webmaster-dsin@univ-fcomte.fr' } },
+      { title: 'Intellectual property', body: 'Unless stated otherwise, the texts, graphic creations, photographs, videos, illustrations and 3D models shown in this portfolio are works by Ruslana Budniak. Reproduction, adaptation or distribution requires prior permission. Third-party trademarks and works remain the property of their respective owners.' },
+      { title: 'Data and local storage', body: 'The website provides no user account or data collection form and uses no advertising or audience analytics. An optional typeface preference may be stored only in the browser’s local storage. Technical server logs may temporarily process IP addresses to ensure service security and operation.' },
+      { title: 'External links', body: 'Links to external websites and platforms are provided for information. Ruslana Budniak cannot guarantee their availability and is not responsible for their content or privacy practices.' },
+    ],
+    updated: 'Last updated: 13 November 2026.',
+  },
+  ru: {
+    title: 'Правовая информация',
+    sections: [
+      { title: 'Автор и издатель', body: 'Это личное некоммерческое портфолио публикует Руслана Будняк, студентка BUT MMI и ответственная за публикацию. Контакт:', link: { href: 'mailto:ruslanabudnak@gmail.com', label: 'ruslanabudnak@gmail.com' } },
+      { title: 'Хостинг', body: 'Сайт и сервис его содержимого размещены на инфраструктуре Управления информационных систем и цифровых технологий (DSIN) Университета Мари и Луи Пастер: 1 rue Claude Goudimel, 25030 Besançon cedex, France. Контакт хостинга:', link: { href: 'mailto:webmaster-dsin@univ-fcomte.fr', label: 'webmaster-dsin@univ-fcomte.fr' } },
+      { title: 'Интеллектуальная собственность', body: 'Если не указано иное, тексты, графические работы, фотографии, видео, иллюстрации и 3D-модели в портфолио созданы Русланой Будняк. Их воспроизведение, изменение или распространение требует предварительного разрешения. Права на сторонние произведения и товарные знаки принадлежат их владельцам.' },
+      { title: 'Данные и локальное хранилище', body: 'На сайте нет пользовательских аккаунтов и форм сбора данных, рекламы или аналитики посещаемости. Необязательная настройка шрифта может сохраняться только в локальном хранилище браузера. Технические журналы сервера могут временно обрабатывать IP-адрес для безопасности и работы сервиса.' },
+      { title: 'Внешние ссылки', body: 'Ссылки на внешние сайты и платформы приведены для информации. Руслана Будняк не отвечает за их доступность, содержимое и правила обработки данных.' },
+    ],
+    updated: 'Последнее обновление: 13 ноября 2026 года.',
+  },
+}[lang];
+---
+
+<section class="min-h-[65vh] px-[7%] py-20">
+  <h1 class="font-display text-5xl font-bold md:text-7xl">{content.title}</h1>
+  <div class="mt-12 max-w-3xl space-y-10 text-base leading-8">
+    {content.sections.map(section => <section>
+      <h2 class="font-display text-2xl font-bold md:text-3xl">{section.title}</h2>
+      <p class="mt-3">
+        {section.body}
+        {section.link && <> <a class="underline underline-offset-4" href={section.link.href}>{section.link.label}</a>.</>}
+      </p>
+    </section>)}
+    <p class="text-sm text-muted">{content.updated}</p>
+  </div>
+</section>
