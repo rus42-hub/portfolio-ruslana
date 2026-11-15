@@ -17,7 +17,7 @@ const t = aboutCopy[lang];
         <p class="mt-5 text-sm leading-[1.7] md:text-base">{t.introduction}</p>
         <div class="mt-8 flex flex-col items-center gap-6 md:flex-row md:items-center">
           <a href={url(lang, 'projects')} class="pill-button inline-flex min-h-[45px] items-center justify-center px-8 text-xs font-bold uppercase tracking-[1.5px]">{t.projects} →</a>
-          <span aria-disabled="true" class="text-center text-xs font-semibold uppercase tracking-[1.5px]" title={t.cvSoon}>{t.cv} ↓<span class="mt-1 block text-[10px] font-normal normal-case tracking-normal opacity-60">{t.cvSoon}</span></span>
+          <a href="/CV.pdf" download class="text-center text-xs font-semibold uppercase tracking-[1.5px] underline underline-offset-4">{t.cv} ↓</a>
         </div>
       </div>
     </div>
