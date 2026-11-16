@@ -1,0 +1,141 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SSH_HOST: 185.157.244.202
+      SSH_PORT: "23055"
+      SSH_USER: etudiant
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check Astro project
+        run: bun run check
+
+      - name: Run project tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test_file in tests/*.ts; do
+            bun "$test_file"
+          done
+
+      - name: Build production site
+        env:
+          PUBLIC_POCKETBASE_URL: https://portfolio-api.ruslanabudniak.fr
+          SITE_URL: https://portfolio.ruslanabudniak.fr
+        run: bun run build
+
+      - name: Verify production build
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/sitemap-index.xml
+          if grep -R -E '127\.0\.0\.1|localhost' dist; then
+            echo "Localhost reference found in the production build." >&2
+            exit 1
+          fi
+          tar -czf "${RUNNER_TEMP}/portfolio-release.tar.gz" -C dist .
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/portfolio
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/portfolio ~/.ssh/known_hosts
+
+      - name: Upload release
+        shell: bash
+        run: |
+          set -euo pipefail
+          destination="/tmp/portfolio-${GITHUB_SHA}.tar.gz"
+          for attempt in 1 2 3; do
+            if scp -i ~/.ssh/portfolio -P "$SSH_PORT" \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=30 \
+              -o ServerAliveInterval=15 \
+              -o ServerAliveCountMax=20 \
+              "${RUNNER_TEMP}/portfolio-release.tar.gz" \
+              "$SSH_USER@$SSH_HOST:$destination"; then
+              exit 0
+            fi
+            echo "Upload attempt $attempt failed." >&2
+            sleep $((attempt * 10))
+          done
+          exit 1
+
+      - name: Activate release
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/portfolio -p "$SSH_PORT" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=30 \
+            -o ServerAliveInterval=15 \
+            -o ServerAliveCountMax=20 \
+            "$SSH_USER@$SSH_HOST" "RELEASE_SHA='$GITHUB_SHA' bash -se" <<'DEPLOY'
+          set -euo pipefail
+          app_root=/var/www/portfolio/site
+          releases="$app_root/releases"
+          release="$releases/$RELEASE_SHA"
+          archive="/tmp/portfolio-$RELEASE_SHA.tar.gz"
+          previous="$(readlink -f "$app_root/current" 2>/dev/null || true)"
+
+          rm -rf "$release"
+          mkdir -p "$release"
+          tar --warning=no-timestamp -xzf "$archive" -C "$release"
+          test -f "$release/index.html"
+          test -f "$release/sitemap-index.xml"
+          ln -sfn "$release" "$app_root/current"
+          rm -f "$archive"
+
+          for candidate in "$releases"/*; do
+            [ -d "$candidate" ] || continue
+            [ "$candidate" = "$release" ] && continue
+            [ "$candidate" = "$previous" ] && continue
+            rm -rf "$candidate"
+          done
+          DEPLOY
+
+      - name: Verify deployed site
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 \
+            https://portfolio.ruslanabudniak.fr/ > /dev/null
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 \
+            https://portfolio-api.ruslanabudniak.fr/api/health > /dev/null
