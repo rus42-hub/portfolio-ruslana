@@ -5,6 +5,6 @@ const { lang, variant = 'hero' } = Astro.props;
 ---
 <div class={`portrait ${variant}-portrait`}>
   <img src="/shapes/portrait.svg" alt="" class="portrait-frame" />
-  <img src="/images/portrait-final.png" alt={lang === 'ru' ? 'Портрет Русланы Будняк' : 'Ruslana Budniak'} class="portrait-photo" fetchpriority="high" />
+  <img src="/images/portrait.webp" alt={lang === 'ru' ? 'Портрет Русланы Будняк' : 'Ruslana Budniak'} class="portrait-photo" fetchpriority="high" />
   {variant === 'hero' ? <><img src="/shapes/dots.svg" alt="" class="portrait-dots" /><img src="/shapes/dots.svg" alt="" class="portrait-dots portrait-dots-upper" /></> : <img src="/shapes/orbit-portrait.svg" alt="" class="portrait-orbit" />}
 </div>

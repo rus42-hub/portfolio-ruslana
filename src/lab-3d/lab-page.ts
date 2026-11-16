@@ -280,8 +280,4 @@ for (const frame of document.querySelectorAll<HTMLElement>('[data-lab-model]')) 
     });
   };
   const stopObserving = whenNear(frame, start);
-  if (frame.dataset.labMode === 'home') {
-    if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 900 });
-    else setTimeout(start, 500);
-  }
 }
