@@ -5,7 +5,7 @@
   --color-line: #3B3025;
   --color-card: #FBF4EA;
   --color-muted: #AC9173;
-  /* Try-on: Noto Serif Display 300. Earlier: 'Literata Variable' (import literata/opsz.css in BaseLayout), 'Oranienbaum' */
+
   --font-editorial: 'Noto Serif Display Variable', Georgia, serif;
   --font-display-weight: 300;
   --font-display: var(--font-editorial);

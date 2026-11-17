@@ -120,10 +120,10 @@ Keywords-поле не добавлено: Google не использует meta
 
 ## Где лежат файлы и запуск
 
-База: C:/Users/VivoBook/Documents/ChatGPT/Base-de-donnees-Portfolio. Код миграций и проверок хранится также в репозитории pocketbase/, без настоящих данных и паролей. Резервная копия до настройки — в backups/ соседней папки базы. После изменения hooks на Windows сервер перезапускается. При переносе на VPS копируем совместимые миграции/hooks и данные с отдельным резервным копированием файлов.
+База: ../Base-de-donnees-Portfolio. Код миграций и проверок хранится также в репозитории pocketbase/, без настоящих данных и паролей. Резервная копия до настройки — в backups/ соседней папки базы. После изменения hooks на Windows сервер перезапускается. При переносе на VPS копируем совместимые миграции/hooks и данные с отдельным резервным копированием файлов.
 
 ```powershell
-cd "C:\Users\VivoBook\Documents\ChatGPT\Base-de-donnees-Portfolio"
+cd "..\Base-de-donnees-Portfolio"
 .\pocketbase.exe serve --http=127.0.0.1:8097
 ```
 

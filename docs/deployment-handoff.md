@@ -4,8 +4,8 @@
 
 ## Пути на Windows
 
-- Репозиторий сайта: `C:/Users/VivoBook/Documents/ChatGPT/Portfolio`.
-- PocketBase: `C:/Users/VivoBook/Documents/ChatGPT/Base-de-donnees-Portfolio`. Внутри `pocketbase.exe`, `pb_data`, `pb_hooks`, `pb_migrations`, `backups` и `pb_imports`. Уточни версию по локальному бинарнику перед подбором Linux-версии.
+- Репозиторий сайта: `Portfolio`.
+- PocketBase: `../Base-de-donnees-Portfolio`. Внутри `pocketbase.exe`, `pb_data`, `pb_hooks`, `pb_migrations`, `backups` и `pb_imports`. Уточни версию по локальному бинарнику перед подбором Linux-версии.
 - Исходники схемы и проверок в репозитории: `pocketbase/pb_migrations` и `pocketbase/pb_hooks`. Разовые импорты в `pocketbase/imports`. Они требуют локальных исходников из игнорируемой папки `pocketbase/import-assets`. При переносе готовой базы эти импорты повторно запускать не нужно.
 - Локальный запуск: `bun run dev`. Скрипт `scripts/dev.mjs` подключает существующую базу или запускает её. Сайт на `http://127.0.0.1:4330/`, админка базы на `http://127.0.0.1:8097/_/`.
 
