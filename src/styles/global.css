@@ -12,7 +12,7 @@ body { margin: 0; position: relative; isolation: isolate; background: var(--colo
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 6px; }
 summary::-webkit-details-marker { display: none; }
 .paper { width: calc(100% - 5.5vw); max-width: 1600px; margin-inline: auto; --paper-top: 100px; padding-top: var(--paper-top); background: var(--color-paper); overflow: clip; position: relative; mask: url('/shapes/paper-sides.svg') center / 100% 100% no-repeat; }
-.paper::after { content: ''; display: block; height: 32px; background: var(--color-brown); mask: url('/shapes/paper-bottom.svg') center / 100% 100% no-repeat; }
+.paper::after { content: ''; display: block; height: 32px; background: var(--color-brown); mask: url('/shapes/paper-bottom.svg') center top / 100% 34px no-repeat; }
 .hero { min-height: calc(100dvh - var(--paper-top)); position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); padding: 0 7%; }
 .hero-marquee { position: absolute; left: -12%; top: 15%; width: 125%; font-family: var(--font-display); font-weight: var(--font-display-weight); font-synthesis-weight: none; font-size: clamp(120px, 23vw, 340px); line-height: 1; letter-spacing: -.025em; white-space: nowrap; pointer-events: none; transform: translateY(var(--text-scroll, 0px)) rotate(9deg); transform-origin: center; }
 .marquee-track { display: flex; width: max-content; animation: marquee 120s linear infinite; will-change: transform; }
