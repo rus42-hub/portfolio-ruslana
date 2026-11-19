@@ -2,6 +2,15 @@
 
 Site statique Astro et Tailwind CSS, en français, anglais et russe. PocketBase fournit les projets à la construction et sert leurs médias.
 
+## Liens du projet
+
+- [Portfolio publié](https://portfolio.ruslanabudniak.fr/)
+- [Repository GitHub](https://github.com/rus42-hub/portfolio-ruslana)
+- [Prototype Figma](https://www.figma.com/proto/K24TyF3tEHo8krlJet7nsz/Portfolio?node-id=15-534)
+- [API PocketBase](https://portfolio-api.ruslanabudniak.fr/)
+- [Administration PocketBase — authentification requise](https://portfolio-api.ruslanabudniak.fr/_/)
+- [Sitemap](https://portfolio.ruslanabudniak.fr/sitemap-index.xml)
+
 ## Développement local
 
 Depuis le dépôt, lancer `bun install` puis `bun run dev`. Le script démarre ou réutilise la base existante dans le dossier voisin `Base-de-donnees-Portfolio`.
